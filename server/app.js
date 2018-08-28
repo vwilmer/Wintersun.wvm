@@ -2,7 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
-
+// get only sequelize object
+const {sequelize} = require('./model')
+const config = require('./config/index')
 const app = express();
 
 app.use(morgan('combined'));
@@ -16,12 +18,16 @@ app.use(bodyParser.json());
 // enable all cors requests
 app.use(cors());
 
-app.get('/estado', (req, res) => {
-    res.send({
-        mensaje: 'bua'
-    });
+// define routes
+require('./route')(app);
+
+// sync with database postgres
+sequelize.sync({
+    force: false
+}).then(() => {
+    app.listen(config.port)
+    console.log(`servidor corriendo en ${config.port}`)
+}).catch(err => {
+    console.error('Unable to connect to the database:', err)
 });
 
-app.listen(7070, () => {
-    console.log('servidor corriendo en 7070')
-});
