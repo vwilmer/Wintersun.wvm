@@ -10,9 +10,6 @@
 
       <v-flex xs6>
         <v-layout row wrap>
-          <v-flex xs12 class="text-xs-center">
-            <h1 class="orange--text">Crea una cuenta</h1>
-          </v-flex>
 
           <v-flex xs12 mt-2>
             <!--xs12 sm6 offset-sm3-->
@@ -69,7 +66,7 @@
         </v-layout>
       </v-flex>
 
-      <v-flex xs6>
+      <v-flex xs6 style="display: none;">
         <v-layout row wrap>
           <v-flex xs12 class="text-xs-center">
             <h1 class="cyan--text">Formulario</h1>

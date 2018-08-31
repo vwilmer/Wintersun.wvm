@@ -1,22 +1,22 @@
 <template>
   <v-container grid-list-md text-xs-center>
       <v-layout row wrap>
-        <v-flex xs12 class="text-xs-center">
-          <h1 class="red--text">Ingresar</h1>
-        </v-flex>
-
         <v-flex xs6 offset-sm3 mt-2>
-          <form @submit.prevent="login" autocomplete="off">
+          <form @submit.prevent="login"
+                autocomplete="off">
             <v-layout column>
-
               <v-flex>
                 <v-text-field
                   name="email"
-                  label="Correo Electrónico"
+                  label="Usuario"
                   id="email"
-                  type="email"
+                  type="text"
                   v-model="email"
-                  required/>
+                  :rules="userNameRules"
+                  color="info"
+                  required
+
+                  @keyup.enter="login"/>
               </v-flex>
               <v-flex>
                 <v-text-field
@@ -25,7 +25,15 @@
                   id="password"
                   type="password"
                   v-model="password"
-                  required/>
+                  :rules="passwordRules"
+                  required
+                  color="info"
+
+                  @keyup.enter="login"
+
+                  :append-icon="passwordVisible ? 'visibility_off' : 'visibility'"
+                  :type="passwordVisible ? 'text' : 'password'"
+                  @click:append="passwordVisible = !passwordVisible"/>
               </v-flex>
 
               <v-alert
@@ -34,8 +42,12 @@
                 type="error">{{problema}}
               </v-alert>
 
-              <v-flex class="text-xs-center" mt-5>
-                <v-btn color="primary" type="submit"><v-icon>info</v-icon>Entrar</v-btn>
+              <v-flex class="text-xs-center" mt-3>
+                <v-btn color="primary" type="submit"
+                       :disabled="!validar"
+                       >
+                  <v-icon>info</v-icon>Entrar
+                </v-btn>
               </v-flex>
 
             </v-layout>
@@ -54,7 +66,14 @@
       return {
         email: '',
         password: '',
-        problema: null
+        problema: null,
+
+        // test values
+        valid: false,
+        userNameRules: [v => !!v || "Escriba el nombre de usuario"],
+        passwordRules: [v => !!v || "Escriba la contraseña del usuario"],
+        passwordVisible: false,
+        loading: false
       }
     },
     methods: {
@@ -64,14 +83,32 @@
             email: this.email,
             password: this.password
           });
-          const token = res.data.token;
-          console.log(token)
-          // set token in state
-          this.$store.dispatch('setToken', token);
-          // set user in state
-          this.$store.dispatch('setUser', res.data.user);
+
+          if (res.data !== undefined) {
+            const token = res.data.token;
+            console.log(token);
+            // set token in state
+            this.$store.dispatch('setToken', token);
+            // set user in state
+            this.$store.dispatch('setUser', res.data.user);
+          }
+
+          this.loading = true;
         } catch (e) {
-          this.problema = e.response.data.error
+          if (res.data !== undefined) {
+            this.problema = e.response.data.error
+          }
+          this.loading = false;
+        }
+      }
+    },
+    computed: {
+      validar() {
+        if (this.email.length > 0 && this.password.length > 0) {
+          // disable
+          return this.valid = true
+        }  else {
+          return this.valid = false
         }
       }
     }
