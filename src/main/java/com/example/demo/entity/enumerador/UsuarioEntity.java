@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
@@ -19,6 +20,14 @@ public class UsuarioEntity implements UserDetails {
     private String username;
     private String password;
     private boolean active;
+
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "last_login")
+    private Date lastLogin;
+
+    private String email;
 
     @ElementCollection(targetClass = RolType.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "wv_user_role", joinColumns = @JoinColumn(name = "user_id"))

@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface IUserV2Repository extends JpaRepository<UsuarioEntity, Long> {
     UsuarioEntity findByUsername(String username);
     UsuarioEntity findByUsernameAndPassword(String username, String password);
+    UsuarioEntity findByResetToken(String resetToken);
 }

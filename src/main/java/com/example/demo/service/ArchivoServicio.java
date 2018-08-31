@@ -46,9 +46,7 @@ public class ArchivoServicio implements IArchivoCustom {
             response = FileUtils.uploadFileOnServer(uploadfiles);
 
         } catch (Exception e) {
-
             archivoRepository.delete(file);
-
         }
         return response;
     }
@@ -60,11 +58,9 @@ public class ArchivoServicio implements IArchivoCustom {
 
     @Override
     public void delete(Long id) {
-
         File file = new File(this.archivoRepository.findById(id).get().getPath());
         file.delete();
         this.archivoRepository.deleteById(id);
-
     }
 
     @Override
@@ -75,11 +71,8 @@ public class ArchivoServicio implements IArchivoCustom {
     public List<Resultado> getFun(Integer pId) {
         StoredProcedureQuery query = this.em.createStoredProcedureQuery("organizacion.pa_obtener_usuarios_jerarquia");
         query.registerStoredProcedureParameter("pId", Integer.class, ParameterMode.IN);
-
         query.setParameter("pId", pId);
-
         query.execute();
-
 
         List<Object> resultList = (List<Object>) query.getResultList();
         List<Resultado> resultados = new ArrayList<>();
