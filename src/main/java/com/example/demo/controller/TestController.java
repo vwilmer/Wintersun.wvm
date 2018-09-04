@@ -55,11 +55,27 @@ public class TestController {
 
         Message message = new MimeMessage(session);
         message.setFrom(new InternetAddress(username, false));
-
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mensaje.getTo_address()));
-        message.setSubject(mensaje.getAsunto());
-        message.setContent(mensaje.getCuerpo(), "text/html");
+
+        String token = "61b67f71-4640-4dde-b1b1-56914cec6cec";
+        String url = "http://172.16.30.17:2030/winter/reset?token=";
+        String changePassword = "Cambiar la contraseña";
+
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("<h1 style='background:#0277BD; color: white; padding: 10px; border-radius: 5px; text-align: center; font-family: Arial;'>Bienvenido al Sistema de la Autoridad de Fiscalización del Juego | SAFJ</h1>");
+        builder.append("<p><h2 style='font-size: 24px; color: #202124;'>Restablece tu contraseña</h2></p>");
+        builder.append("<p style='margin-top: -10px;'>Para restablecer su contraseña, haga clic en la opción que aparece abajo. Haciendo clic en el botón podrá acceder a la página para cambiar su contraseña.<p/>");
+        builder.append("<p style='margin-top: 25px;'><a style='background: #3F51B5; color: white; text-decoration: none; padding: 10px; border-radius: 3px; border-style: dotted;' target=\"_blank\" " +
+                "href=" + url + token + ">" + changePassword + "</a></p>");
+        builder.append("<br/>");
+        builder.append("<p>Atentamente:</p>");
+        builder.append("<p style='background:#0277BD; border-radius: 10px; padding-left: 20px; padding-right: 28px; padding-bottom: 6px; padding-top: 12px; color: white;'>AUTORIDAD DE FISCALIZACIÓN DEL JUEGO</p>");
+
+        message.setSubject("RESTABLECER LA CONTRASEÑA DE USUARIO");
+        message.setContent(builder.toString(), "text/html; charset=UTF-8");
         message.setSentDate(new Date());
+
 
 //        // messageBodyPart
 //        MimeBodyPart mimeBodyPart = new MimeBodyPart();
@@ -90,3 +106,4 @@ public class TestController {
         return new ResponseEntity<>(this.archivoServicio.getFun(id), HttpStatus.OK);
     }
 }
+

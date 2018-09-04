@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -83,6 +84,11 @@ public class WinterController {
 
     }
 
+    @GetMapping("/forgot")
+    public ModelAndView displayForgotPasswordPage() {
+        return new ModelAndView("forgotPassword");
+    }
+
     @PostMapping("/forgot")
     public ResponseEntity<?> forgotPassword(@RequestBody UsuarioEntity usuarioEntity,
                                             HttpServletRequest request) {
@@ -113,7 +119,7 @@ public class WinterController {
             emailService.sendEmail(passwordResetEmail);
 
             objectMap.put("status", 200);
-            objectMap.put("mensaje", "Se ha enviado un enlace de restablecimiento de contraseña a: " + usuarioEntity.getEmail());
+            objectMap.put("mensaje", "Se ha enviado un enlace de restablecimiento de contraseña a: " + userFromDB.getEmail() + " por favor, revise el mensaje enviado en su correo electrónico.");
             return new ResponseEntity<>(objectMap, HttpStatus.OK);
         }
     }
