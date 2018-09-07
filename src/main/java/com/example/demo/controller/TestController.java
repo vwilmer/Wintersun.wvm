@@ -1,19 +1,22 @@
 package com.example.demo.controller;
 
+import com.example.demo.entity.enumerador.UsuarioEntity;
 import com.example.demo.mail.Mensaje;
+import com.example.demo.repository.IUserV2Repository;
 import com.example.demo.service.ArchivoServicio;
+import com.example.demo.util.pdf.UsuarioEntityPDFView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
 @RestController
 public class TestController {
@@ -25,6 +28,9 @@ public class TestController {
 
     @Autowired
     private ArchivoServicio archivoServicio;
+
+    @Autowired
+    private IUserV2Repository userV2Repository;
 
     @PostMapping("/send")
     public String sendEmail(@RequestBody Mensaje mensaje) throws IOException, MessagingException {
@@ -104,6 +110,19 @@ public class TestController {
 //        System.out.println(this.archivoServicio.getFun(1093).size());
 
         return new ResponseEntity<>(this.archivoServicio.getFun(id), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/reporte")
+    public ModelAndView report() {
+
+        Map<String, Object> model = new HashMap<>();
+
+        List<UsuarioEntity> usuarioEntities = this.userV2Repository.findAll();
+
+        model.put("usuarios", usuarioEntities);
+
+        return new ModelAndView(new UsuarioEntityPDFView(), model);
     }
 }
 
