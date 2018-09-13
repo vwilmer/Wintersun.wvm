@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/list_item_genre_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_pdf_document" />
+
+    <TextView
+        android:id="@+id/tv_subtitle_ley"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="100dp"
+        android:gravity="center_vertical"
+        tools:text="Ley 01" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_fecha_de_emision"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fecha de Emisión"/>
+        <TextView
+            android:id="@+id/tv_descripcion_ley"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descripción"/>
+
+    </LinearLayout>
+
+</FrameLayout>
