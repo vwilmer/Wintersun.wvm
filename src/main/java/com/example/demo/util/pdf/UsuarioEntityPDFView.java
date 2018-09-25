@@ -1,12 +1,17 @@
 package com.example.demo.util.pdf;
 
+import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.FontFactoryImp;
 import com.itextpdf.text.html.simpleparser.HTMLWorker;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.StringReader;
+import java.util.HashMap;
 import java.util.Map;
 
 public class UsuarioEntityPDFView extends AbstractPDFView {
@@ -83,10 +88,10 @@ public class UsuarioEntityPDFView extends AbstractPDFView {
                                     HttpServletRequest request,
                                     HttpServletResponse response) throws Exception {
 
-        String k = "<html><body bgcolor='#E6E6FA'> <table border='1'>\n" +
+        String k = "<html><body bgcolor='#E6E8FA'> <table border='1'>\n" +
                 "  <tr>\n" +
                 "    <th>LOGO - AJ</th>\n" +
-                "    <th>FORMULARIO DE DENUNCIAS</th> \n" +
+                "    <th><font face='Tahoma'>FORMULARIO DE DENUNCIAS</font></th>" +
                 "    <th>LOGO - ESCUDO</th>\n" +
                 "  </tr>\n" +
                 "  <tr>\n" +
@@ -118,11 +123,35 @@ public class UsuarioEntityPDFView extends AbstractPDFView {
 
 
         document.open();
+
+        Map<String,Object> providers = new HashMap <>();
+        providers.put(HTMLWorker.FONT_PROVIDER, new DefaultFontProvider("Times-Roman"));
+
         HTMLWorker htmlWorker = new HTMLWorker(document);
+
+        htmlWorker.setProviders(providers);
         htmlWorker.parse(new StringReader(k));
         document.close();
 
     }
+
+    String fontName = BaseFont.HELVETICA;
+
+    class DefaultFontProvider extends FontFactoryImp {
+        private String defaults;
+        public DefaultFontProvider(String def) {
+            defaults = def;
+        }
+
+        // I believe this is the correct override, but there are quite a few others.
+        public Font getFont(String fontname, String encoding, boolean embedded, float size, int style, BaseColor color, boolean cached) {
+            if (fontName == null) {
+                fontName = defaults;
+            }
+            return super.getFont(fontName, encoding, embedded, size, style, color, cached);
+        }
+    }
+
 
 
 }
