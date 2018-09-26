@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | SAFJ</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link th:href="@{/css/vuetify.min.css}" rel="stylesheet" />
+    <link th:href="@{/css/sweetalert2.min.css}" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <style>
+        .application .theme--dark.v-toolbar, .theme--dark .v-toolbar {
+            background-color: #01579B;
+            color: #fff;
+        }
+
+        .swal2-popup {
+            font-family: Roboto, Helvetica, Arial, sans-serif;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <v-app>
+        <v-content>
+            <v-container>
+                <v-toolbar dark>
+                    <v-toolbar-side-icon></v-toolbar-side-icon>
+                    <v-toolbar-title class="manito"
+                    >Bienvenido a SAFJ
+                    </v-toolbar-title>
+                </v-toolbar>
+                <v-layout row wrap>
+                    <v-flex xs6 offset-sm3 mt-2>
+
+                        <form @submit.prevent="loginUser"
+                              autocomplete="off">
+                            <v-layout column mt-2>
+                                <v-flex>
+
+                                    <v-text-field
+                                        name="email"
+                                        label="Usuario"
+                                        id="email"
+                                        type="text"
+                                        v-model="email"
+                                        :rules="userNameRules"
+                                        color="info"
+                                        required
+                                        @keyup.enter="checkUser"
+                                        @keyup="clearDivs" />
+
+                                </v-flex>
+
+                                <v-flex>
+
+                                    <v-text-field
+                                            @keyup="clearDivs"
+                                            @keyup.enter="checkUser"
+                                            name="password"
+                                            label="Contraseña"
+                                            id="password"
+                                            type="password"
+                                            v-model="password"
+                                            required
+
+                                            :append-icon="passwordVisible ? 'visibility' : 'visibility_off'"
+                                            :type="passwordVisible ? 'text' : 'password'"
+                                            @click:append="passwordVisible = !passwordVisible"
+                                            :rules="passwordRules" />
+
+                                </v-flex>
+
+                                <div>
+                                    <v-alert
+                                        style="display: none;"
+                                        id="pepe"
+                                        dismissible="true"
+                                        v-model="alerta"
+                                        transition="scale-transition"
+                                        outline
+                                        type="error">
+                                        El nombre de usuario no está registrado, para el registro de un nuevo usuario comuníquese con el administrador del sistema o verifique la contraseña y vuelva a intentar.
+                                    </v-alert>
+                                </div>
+
+                                <v-flex class="text-xs-center" mt-3>
+                                    <v-btn color="primary"
+                                           type="submit"
+                                           :disabled="!validar">
+                                        <v-icon>assignment_ind</v-icon>Ingresar
+                                    </v-btn>
+
+                                </v-flex>
+
+                            </v-layout>
+                        </form>
+                    </v-flex>
+                </v-layout>
+            </v-container>
+        </v-content>
+    </v-app>
+</div>
+
+<script type="text/javascript" th:src="@{/js/axios.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/vue.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/vuetify.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/sweetalert2.min.js}"></script>
+<script>
+
+    var URL_LOGIN = 'http://172.16.30.17:2030/winter/login';
+
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            email: '',
+            password: '',
+            passwordVisible: false,
+            passwordRules: [v => !!v || "Escriba la contraseña del usuario"],
+
+            valid: false,
+            userNameRules: [v => !!v || "Escriba el nombre de usuario"],
+            alerta: true
+        },
+        methods: {
+            async loginUser() {
+
+                axios.post(URL_LOGIN, {
+                    username: this.email,
+                    password: this.password
+                })
+                .then(function (response) {
+
+                    console.log(response.data);
+                    // console.log(response.data.mensaje);
+
+                    // document.getElementById("exito").style.display = '';
+                    // document.getElementById("exito").innerHTML = response.data.mensaje;
+
+                    swal(
+                        'Autenticación exitosa!',
+                        'Hola ' + response.data.resultado.username + '!',
+                        'success'
+                    )
+                })
+                .catch(function (error) {
+
+                    console.log(error)
+                    document.getElementById("pepe").style.display = '';
+
+                    var y = document.getElementsByClassName('v-alert__dismissible');
+                    var aNode = y[0];
+                    aNode.addEventListener("click", () => {
+                        document.getElementById("pepe").style.display = 'none';
+                    })
+                });
+
+            },
+
+            clearDivs () {
+                // document.getElementById("exito").style.display = 'none';
+            }
+
+        },
+        computed: {
+            validar() {
+                if (this.email.length > 0 && this.password.length > 0) {
+                    // disable
+                    return this.valid = true
+                }  else {
+                    return this.valid = false
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

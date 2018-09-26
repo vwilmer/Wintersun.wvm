@@ -79,11 +79,11 @@ public class WinterController {
                 }
             });
 
-
             try {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username, false));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(userFromDB.getEmail()));
+                message.setSubject("REF. RESTABLECE TÚ CONTRASEÑA");
                 message.setSentDate(new Date());
                 String url = "http://172.16.30.17:2030/winter/reset?token=";
                 message.setContent(createContentHTMLToSend(userFromDB.getEmail(), url, userFromDB.getResetToken()), "text/html; charset=UTF-8");
@@ -92,17 +92,6 @@ public class WinterController {
                 e.printStackTrace();
             }
 
-
-//            String appUrl = request.getScheme() + "://" + request.getServerName();
-//            // Email message
-//            SimpleMailMessage passwordResetEmail = new SimpleMailMessage();
-//            passwordResetEmail.setFrom("wvillca@aj.gob.bo");
-//            passwordResetEmail.setTo(userFromDB.getEmail());
-//            passwordResetEmail.setSubject("Solicitud de restablecimiento de contraseña");
-//            passwordResetEmail.setText("Para restablecer su contraseña, haga clic en el siguiente enlace:\n" + appUrl
-//                    + "/reset?token=" + userFromDB.getResetToken());
-
-//            emailService.sendEmail(passwordResetEmail);
 
             objectMap.put("status", 200);
             objectMap.put("mensaje", "Se ha enviado un enlace de restablecimiento de contraseña a: " + userFromDB.getEmail() + " por favor, revise el mensaje enviado en su correo electrónico.");
@@ -121,7 +110,7 @@ public class WinterController {
         if (userFromDB != null) {
             // Token found in DB
             resetPass.addObject("status", 200);
-            resetPass.addObject("messageOK", "Para cambiar tu contraseña tienes que escribir la nueva contraseña y volver a escribir la misma contraseña en el formulario que aparece abajo. Si las contraseñas coinciden, el sistema habilitará en botón CAMBIAR CONTRASEÑA, en el cual debe de hacer clic, para que tu contraseña sea restablecida por la que escribió en el formulario, por lo que debe guardar y no compartir su contraseña con nadie.");
+            resetPass.addObject("messageOK", "Para cambiar tu contraseña tienes que escribir la nueva contraseña y volver a escribir la misma contraseña en el formulario que aparece abajo. Si las contraseñas coinciden, el sistema habilitará en botón CAMBIAR CONTRASEÑA, en el cual debes de hacer clic en el mismo y tu contraseña será restablecida y podras iniciar sesión con las nuevas credenciales, por lo que debes de guardar y no compartir tu contraseña con nadie.");
             resetPass.addObject("resetToken", token);
         } else {
             // Token not found in DB
@@ -134,6 +123,9 @@ public class WinterController {
     // make action
     @PostMapping("/reset")
     public ResponseEntity<?> setNewPassword (@RequestParam Map<String, String> requestParams) {
+        System.out.println("BOLIVIA");
+        System.out.println(requestParams.get("token"));
+        System.out.println(requestParams.get("password"));
         UsuarioEntity userFromDB = this.userV2Repository.findByResetToken(requestParams.get("token"));
         Map<String, Object> objectMap = new LinkedHashMap<>();
 
@@ -150,11 +142,17 @@ public class WinterController {
             return new ResponseEntity<>(objectMap, HttpStatus.OK);
         } else {
             // Token not found in DB
-            objectMap.put("message", "Oops!  Este es un enlace de restablecimiento de contraseña inválido.");
+            objectMap.put("message", "Oops!  Parece que tu enlace de restablecimiento de contraseña inválido.");
             objectMap.put("status", 404);
             return new ResponseEntity<>(objectMap, HttpStatus.NOT_FOUND);
         }
 
+    }
+
+    // display form to forgot login
+    @GetMapping("/login")
+    public ModelAndView displayLoginPage() {
+        return new ModelAndView("login");
     }
 
     @PostMapping("/login")
