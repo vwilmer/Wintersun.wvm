@@ -27,18 +27,20 @@
                 <v-toolbar dark>
                     <v-toolbar-side-icon></v-toolbar-side-icon>
                     <v-toolbar-title class="manito"
-                    >Bienvenido a SAFJ
+                    >SAFJ | v1
                     </v-toolbar-title>
                 </v-toolbar>
                 <v-layout row wrap>
                     <v-flex xs6 offset-sm3 mt-2>
 
-                        <form @submit.prevent="loginUser"
+                        <v-form @submit.prevent="loginUser"
+
                               autocomplete="off">
                             <v-layout column mt-2>
                                 <v-flex>
 
                                     <v-text-field
+
                                         name="email"
                                         label="Usuario"
                                         id="email"
@@ -47,7 +49,6 @@
                                         :rules="userNameRules"
                                         color="info"
                                         required
-                                        @keyup.enter="checkUser"
                                         @keyup="clearDivs" />
 
                                 </v-flex>
@@ -56,7 +57,7 @@
 
                                     <v-text-field
                                             @keyup="clearDivs"
-                                            @keyup.enter="checkUser"
+
                                             name="password"
                                             label="Contraseña"
                                             id="password"
@@ -94,7 +95,7 @@
                                 </v-flex>
 
                             </v-layout>
-                        </form>
+                        </v-form>
                     </v-flex>
                 </v-layout>
             </v-container>
