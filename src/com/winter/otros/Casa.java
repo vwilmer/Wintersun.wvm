@@ -193,9 +193,9 @@ for (int i = 0; i<= 55; i++) {
 
     public static String generar() {
         String ts = String.valueOf(System.currentTimeMillis());
-        ArrayList<Integer> list = new ArrayList<Integer>();
+        ArrayList<Integer> list = new ArrayList<>();
         for (int i = 1; i < 10; i++) {
-            list.add(new Integer(i));
+            list.add(i);
         }
         Collections.shuffle(list);
 

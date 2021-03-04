@@ -19,9 +19,7 @@ public class Pepe {
 
         text = text.replaceAll("[^a-zA-Z0-9.]", "_");
 
-
         System.out.println(text);
-
 
         //locale();
     }
